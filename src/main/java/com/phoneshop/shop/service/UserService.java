@@ -3,7 +3,6 @@ package com.phoneshop.shop.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.phoneshop.shop.entity.User;
 
-import java.util.List;
 
 public interface UserService extends IService<User> {
     User getByUserName(String userName);
