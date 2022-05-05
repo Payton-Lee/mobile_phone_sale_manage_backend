@@ -40,5 +40,10 @@ class MobilePhoneSaleApplicationTests {
         System.out.println(verifyKey);
         System.out.println(verifyTime);
     }
+    @Test
+    void testQueryUsername() {
+        System.out.println(userService.getByUserName("admin"));
+    }
+
 
 }

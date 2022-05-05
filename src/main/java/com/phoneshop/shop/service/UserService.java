@@ -10,5 +10,5 @@ public interface UserService extends IService<User> {
     String getToken(User user, String key);
     String getEncryptedPassword(String password);
     Boolean verifyPassword(String password, String pw_hash);
-
+    Boolean register(User user);
 }

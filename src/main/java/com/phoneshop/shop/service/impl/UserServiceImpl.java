@@ -2,6 +2,7 @@ package com.phoneshop.shop.service.impl;
 
 import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateTime;
+import cn.hutool.core.lang.Dict;
 import cn.hutool.crypto.digest.BCrypt;
 import cn.hutool.jwt.JWTPayload;
 import cn.hutool.jwt.JWTUtil;
@@ -54,5 +55,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public Boolean verifyPassword(String password, String pw_hash) {
         return BCrypt.checkpw(password,pw_hash);
+    }
+
+    @Override
+    public Boolean register(User user) {
+        return save(user);
     }
 }
