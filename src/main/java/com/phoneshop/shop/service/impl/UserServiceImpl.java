@@ -2,20 +2,26 @@ package com.phoneshop.shop.service.impl;
 
 import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateTime;
-import cn.hutool.core.lang.Dict;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.crypto.digest.BCrypt;
+import cn.hutool.jwt.JWT;
 import cn.hutool.jwt.JWTPayload;
 import cn.hutool.jwt.JWTUtil;
+import cn.hutool.jwt.JWTValidator;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.phoneshop.shop.entity.User;
+import com.phoneshop.shop.entity.UserVo;
 import com.phoneshop.shop.mapper.UserMapper;
 import com.phoneshop.shop.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
 
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
@@ -31,7 +37,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return getByUserName(userName) != null;
     }
     @Override
-    public String getToken(User user, String key) {
+    public String getToken(User user) {
         DateTime now = DateTime.now();
         DateTime newTime = now.offsetNew(DateField.MINUTE, 10);
         Map<String, Object> payload = new HashMap<>();
@@ -42,9 +48,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // 生效时间
         payload.put(JWTPayload.NOT_BEFORE, now);
         // 载荷
+        payload.put("userId", user.getId());
         payload.put("username", user.getUsername());
         payload.put("password", user.getPassword());
-        return JWTUtil.createToken(payload, key.getBytes());
+        return JWTUtil.createToken(payload, "peytonlee".getBytes());
     }
 
     @Override
@@ -61,4 +68,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public Boolean register(User user) {
         return save(user);
     }
+
+    @Override
+    public List<User> getUserExceptPassword() {
+        LambdaQueryWrapper<User> wrapper = Wrappers.<User>lambdaQuery().select(User.class, info -> !info.getColumn().equals("password"));
+        return userMapper.selectList(wrapper);
+    }
+
+    @Override
+    public Integer getTokenUserId(String token) {
+        final JWT jwt = JWTUtil.parseToken(token);
+        return (Integer) jwt.getPayload("userId");
+    }
+
 }

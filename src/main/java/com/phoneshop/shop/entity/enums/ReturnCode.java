@@ -15,7 +15,8 @@ public enum ReturnCode {
     USERNAME_EXIST(1001, "用户名已存在"),
     USERNAME_ERROR(1002,"用户名错误"),
     PASSWORD_ERROR(1003, "密码错误"),
-    USER_DENIED(1004, "用户被禁用");
+    USER_DENIED(1004, "用户被禁用"),
+    USER_NO_LOGIN(1005,"用户未登录");
 
 
     public final int code;

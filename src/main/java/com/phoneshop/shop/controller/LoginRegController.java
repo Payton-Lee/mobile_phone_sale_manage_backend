@@ -34,7 +34,7 @@ public class LoginRegController {
             } else {
                 // 对密码进行hash判断
                 if (userService.verifyPassword(password, userInDB.getPassword())) {
-                    String token = userService.getToken(userInDB, "mobile_phone");
+                    String token = userService.getToken(userInDB);
                     result.set("username", userInDB.getUsername()).set("msg", "登录成功").set("token", token);
                     resultData = ResultData.success(ReturnCode.RC200.code, ReturnCode.RC200.message, result);
                 } else {
@@ -45,7 +45,7 @@ public class LoginRegController {
         return resultData;
     }
     @PostMapping("/register")
-    public Object register(@RequestParam String username, @RequestParam String password,@RequestParam String email,@RequestParam String sex,@RequestParam String telephone, @RequestParam(required = false) String hobby, @RequestParam(required = false) String introduce) {
+    public Object register(@RequestParam String username, @RequestParam String password, @RequestParam String email, @RequestParam String sex, @RequestParam String telephone, @RequestParam(required = false) String hobby, @RequestParam(required = false) String introduce, @RequestParam(defaultValue = "0") Integer state) {
         Dict result = Dict.create();
         ResultData<Object> resultData;
         if(userService.isExist(username)) {
@@ -61,7 +61,7 @@ public class LoginRegController {
             user.setHobby(hobby);
             user.setIntroduce(introduce);
             user.setCreateTime(LocalDateTime.now());
-            user.setState(0);
+            user.setState(state);
             if (userService.register(user)) {
                 result.set("username", user.getUsername()).set("msg", "注册成功");
                 resultData = ResultData.success(ReturnCode.RC201.code, ReturnCode.RC201.message, result);
