@@ -23,4 +23,11 @@ public class ResultData<T> {
         resultData.setMessage(message);
         return resultData;
     }
+    public static <T> ResultData<T> fail(int code, String message, T data) {
+        ResultData<T> resultData = new ResultData<>();
+        resultData.setStatus(code);
+        resultData.setMessage(message);
+        resultData.setData(data);
+        return resultData;
+    }
 }
