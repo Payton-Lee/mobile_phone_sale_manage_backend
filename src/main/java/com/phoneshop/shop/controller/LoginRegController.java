@@ -1,18 +1,17 @@
 package com.phoneshop.shop.controller;
 
 import cn.hutool.core.lang.Dict;
-import com.phoneshop.shop.entity.ResultData;
+import com.phoneshop.shop.entity.result.ResultData;
 import com.phoneshop.shop.entity.User;
 import com.phoneshop.shop.entity.enums.ReturnCode;
 import com.phoneshop.shop.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 
 @RestController
+@RequestMapping("/v1")
 public class LoginRegController {
     private UserService userService;
     @Autowired
@@ -45,24 +44,18 @@ public class LoginRegController {
         return resultData;
     }
     @PostMapping("/register")
-    public Object register(@RequestParam String username, @RequestParam String password, @RequestParam String email, @RequestParam String sex, @RequestParam String telephone, @RequestParam(required = false) String hobby, @RequestParam(required = false) String introduce, @RequestParam(defaultValue = "0") Integer state) {
+    public Object register(@RequestBody User user) {
         Dict result = Dict.create();
         ResultData<Object> resultData;
-        if(userService.isExist(username)) {
+        if(userService.isExist(user.getUsername())) {
             resultData = ResultData.fail(ReturnCode.USERNAME_EXIST.code, ReturnCode.USERNAME_EXIST.message);
         } else {
-            String pw_hash = userService.getEncryptedPassword(password);
-            User user = new User();
-            user.setUsername(username);
-            user.setPassword(pw_hash);
-            user.setEmail(email);
-            user.setSex(sex);
-            user.setTelephone(telephone);
-            user.setHobby(hobby);
-            user.setIntroduce(introduce);
+            user.setPassword(userService.getEncryptedPassword(user.getPassword()));
+            if(user.getState() == null) {
+                user.setState(0);
+            }
             user.setCreateTime(LocalDateTime.now());
-            user.setState(state);
-            if (userService.register(user)) {
+            if(userService.register(user)){
                 result.set("username", user.getUsername()).set("msg", "注册成功");
                 resultData = ResultData.success(ReturnCode.RC201.code, ReturnCode.RC201.message, result);
             } else {

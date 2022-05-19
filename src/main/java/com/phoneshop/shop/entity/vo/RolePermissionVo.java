@@ -1,4 +1,4 @@
-package com.phoneshop.shop.entity;
+package com.phoneshop.shop.entity.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,13 +1,13 @@
 package com.phoneshop.shop;
 
-import cn.hutool.core.util.IdUtil;
-import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.digest.BCrypt;
+import cn.hutool.json.JSONUtil;
 import cn.hutool.jwt.JWT;
 import cn.hutool.jwt.JWTUtil;
-import com.phoneshop.shop.entity.RolePermissionVo;
+import com.phoneshop.shop.entity.vo.RolePermissionVo;
 import com.phoneshop.shop.entity.User;
-import com.phoneshop.shop.entity.UserRoleVo;
+import com.phoneshop.shop.entity.vo.UserRoleVo;
+import com.phoneshop.shop.entity.enums.PermissionCode;
 import com.phoneshop.shop.service.PermissionService;
 import com.phoneshop.shop.service.RoleService;
 import com.phoneshop.shop.service.UserService;
@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Arrays;
 import java.util.List;
 
 @SpringBootTest
@@ -86,6 +87,35 @@ class MobilePhoneSaleApplicationTests {
         Integer tokenUserId = userService.getTokenUserId(token);
         System.out.println(roleService.findRoleListByUserId(tokenUserId));
     }
+    @Test
+    void checkPermission() {
+        String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwYXNzd29yZCI6IiQyYSQxMCRCYW9HZmhVeXNCYVhNWnNyTXUwaTMuWE53RUR3Q0lOSVpLMUY5SGxNR2NuUXlOMEcwWWptVyIsIm5iZiI6MTY1MjUzODQ2NiwiZXhwIjoxNjUyNTM5MDY2LCJpYXQiOjE2NTI1Mzg0NjYsInVzZXJJZCI6MywidXNlcm5hbWUiOiJ4aWFvbWluZyJ9.bIMwoqLND5L56cVteKyvfi0JoIc38op-JB4yaGOtQ8Q";
+        Integer userid = userService.getTokenUserId(token);
+        List<UserRoleVo> userRoleVos = roleService.findRoleListByUserId(userid);
+        for (UserRoleVo userRoleVo : userRoleVos) {
+            List<RolePermissionVo> rolePermissionVos = permissionService.findPermissionByRoleId(userRoleVo.getRoleId());
+            for(RolePermissionVo rolePermissionVo : rolePermissionVos) {
+                System.out.println(rolePermissionVo.getPermission());
+            }
+        }
+
+        Boolean permission = permissionService.verifyPermission(token, PermissionCode.PC101.name);
+        System.out.println(permission);
+    }
+    @Test
+    void jsonToClass() {
+        String json = "{\"username\":\"xiaozhang\",\"password\":123456}";
+        User user = JSONUtil.toBean(json, User.class);
+        System.out.println(user);
+    }
+
+    @Test
+    void testString() {
+        String roleIds = "1,2,3,4";
+        String[] roleId = roleIds.split(",");
+        System.out.println(Arrays.toString(roleId));
+    }
+
 
 
 }

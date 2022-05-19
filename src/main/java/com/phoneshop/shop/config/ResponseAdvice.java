@@ -1,8 +1,7 @@
 package com.phoneshop.shop.config;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.phoneshop.shop.entity.ResultData;
+import com.phoneshop.shop.entity.result.ResultData;
 import com.phoneshop.shop.entity.enums.ReturnCode;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;

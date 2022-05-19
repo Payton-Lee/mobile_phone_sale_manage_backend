@@ -2,7 +2,7 @@ package com.phoneshop.shop.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.phoneshop.shop.entity.Role;
-import com.phoneshop.shop.entity.UserRoleVo;
+import com.phoneshop.shop.entity.vo.UserRoleVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 

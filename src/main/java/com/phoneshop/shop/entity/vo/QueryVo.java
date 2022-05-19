@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class QueryVo {
-    private Integer current;
-    private Integer size;
+    private Long current;
+    private Long size;
     private String queryInfo;
 }

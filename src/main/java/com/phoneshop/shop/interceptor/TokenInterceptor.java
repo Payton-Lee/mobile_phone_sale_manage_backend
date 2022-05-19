@@ -2,7 +2,7 @@ package com.phoneshop.shop.interceptor;
 
 import cn.hutool.json.JSONUtil;
 import cn.hutool.jwt.JWTUtil;
-import com.phoneshop.shop.entity.ResultData;
+import com.phoneshop.shop.entity.result.ResultData;
 import com.phoneshop.shop.entity.enums.ReturnCode;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;

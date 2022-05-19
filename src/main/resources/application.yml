@@ -1,7 +1,7 @@
 server:
   port: 9001
   servlet:
-    context-path: /shop
+    context-path: /shop/api
 
 spring:
   datasource:
@@ -15,3 +15,8 @@ mybatis-plus:
   global-config:
     db-config:
       id-type: auto
+
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+

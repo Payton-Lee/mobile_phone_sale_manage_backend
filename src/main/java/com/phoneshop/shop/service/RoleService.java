@@ -2,7 +2,7 @@ package com.phoneshop.shop.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.phoneshop.shop.entity.Role;
-import com.phoneshop.shop.entity.UserRoleVo;
+import com.phoneshop.shop.entity.vo.UserRoleVo;
 
 import java.util.List;
 

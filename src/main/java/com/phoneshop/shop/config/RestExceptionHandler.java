@@ -1,6 +1,6 @@
 package com.phoneshop.shop.config;
 
-import com.phoneshop.shop.entity.ResultData;
+import com.phoneshop.shop.entity.result.ResultData;
 import com.phoneshop.shop.entity.enums.ReturnCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
