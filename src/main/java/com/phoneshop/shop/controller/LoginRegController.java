@@ -48,12 +48,16 @@ public class LoginRegController {
         Dict result = Dict.create();
         ResultData<Object> resultData;
         if(userService.isExist(user.getUsername())) {
+            // 判断用户是否存在，存在则不允许注册
             resultData = ResultData.fail(ReturnCode.USERNAME_EXIST.code, ReturnCode.USERNAME_EXIST.message);
         } else {
+            // 把密码加密
             user.setPassword(userService.getEncryptedPassword(user.getPassword()));
+            // 设置状态，默认值为0
             if(user.getState() == null) {
                 user.setState(0);
             }
+            // 设置当前用户的创建时间
             user.setCreateTime(LocalDateTime.now());
             if(userService.register(user)){
                 result.set("username", user.getUsername()).set("msg", "注册成功");
