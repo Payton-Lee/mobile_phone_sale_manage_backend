@@ -16,6 +16,7 @@ public class Order {
     private Integer userId;
     private String orderNumber;
     private Integer goodsId;
+    private String goods;
     private double orderPrice;
     private Integer orderPay;
     private Integer payStatus;

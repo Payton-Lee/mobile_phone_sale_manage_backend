@@ -5,8 +5,6 @@ import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.phoneshop.shop.entity.Goods;
-import com.phoneshop.shop.entity.Role;
-import com.phoneshop.shop.entity.vo.QueryVo;
 import com.phoneshop.shop.mapper.GoodsMapper;
 import com.phoneshop.shop.service.GoodsService;
 import org.springframework.stereotype.Service;
@@ -14,12 +12,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements GoodsService {
     @Override
-    public Page<Goods> pageGoodsList(QueryVo queryVo) {
+    public Page<Goods> pageGoodsList(Integer current, Integer size, String queryInfo) {
         QueryWrapper<Goods> wrapper = new QueryWrapper<>();
-        Page<Goods> page = new Page<>(queryVo.getCurrent(), queryVo.getSize());
-        if(!StringUtils.isEmpty(queryVo.getQueryInfo())) {
-            wrapper.like("goods", queryVo.getQueryInfo());
+        Page<Goods> page = new Page<>(current, size);
+        if(!StringUtils.isEmpty(queryInfo)) {
+            wrapper.like("goods", queryInfo);
         }
+        wrapper.eq("is_deleted", 1);
         return page(page, wrapper);
     }
 }

@@ -13,7 +13,8 @@ public interface PermissionMapper extends BaseMapper<Permission> {
     @Select("SELECT \n" +
             "ps_permission.id AS permissionId, \n" +
             "ps_permission.`name` AS permission, \n" +
-            "ps_role.`name` AS role \n" +
+            "ps_role.`name` AS role, \n" +
+            "ps_permission.type AS type \n" +
             "FROM \n" +
             "ps_permission, ps_role, ps_role_premission \n" +
             "WHERE\n" +

@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.phoneshop.shop.entity.Permission;
-import com.phoneshop.shop.entity.vo.QueryVo;
 import com.phoneshop.shop.entity.vo.RolePermissionVo;
 import com.phoneshop.shop.mapper.PermissionMapper;
 import com.phoneshop.shop.service.PermissionService;
@@ -43,11 +42,11 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
     }
 
     @Override
-    public Page<Permission> pagePermissionList(QueryVo queryVo) {
+    public Page<Permission> pagePermissionList(Integer current, Integer size, String queryInfo) {
         QueryWrapper<Permission> wrapper = new QueryWrapper<>();
-        Page<Permission> page = new Page<>(queryVo.getCurrent(), queryVo.getSize());
-        if(!StringUtils.isEmpty(queryVo.getQueryInfo())) {
-            wrapper.like("name", queryVo.getQueryInfo());
+        Page<Permission> page = new Page<>(current, size);
+        if(!StringUtils.isEmpty(queryInfo)) {
+            wrapper.like("name", queryInfo);
         }
         return page(page, wrapper);
     }

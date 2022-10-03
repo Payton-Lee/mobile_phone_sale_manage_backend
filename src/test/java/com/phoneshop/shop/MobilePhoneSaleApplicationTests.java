@@ -8,9 +8,8 @@ import com.phoneshop.shop.entity.vo.RolePermissionVo;
 import com.phoneshop.shop.entity.User;
 import com.phoneshop.shop.entity.vo.UserRoleVo;
 import com.phoneshop.shop.entity.enums.PermissionCode;
-import com.phoneshop.shop.service.PermissionService;
-import com.phoneshop.shop.service.RoleService;
-import com.phoneshop.shop.service.UserService;
+import com.phoneshop.shop.service.*;
+import com.phoneshop.shop.utils.CodeGenerateUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,6 +25,12 @@ class MobilePhoneSaleApplicationTests {
     private RoleService roleService;
     @Autowired
     private PermissionService permissionService;
+    @Autowired
+    private ConsigneeService consigneeService;
+    @Autowired
+    private ImageService imageService;
+    @Autowired
+    private SalesDataService salesDataService;
     @Test
     void contextLoads() {
         String password = "12345678";
@@ -116,6 +121,28 @@ class MobilePhoneSaleApplicationTests {
         System.out.println(Arrays.toString(roleId));
     }
 
-
-
+    @Test
+    void testConsignee() {
+        System.out.println(consigneeService.findUserConsigneeByConsigneeId(1));
+        System.out.println(consigneeService.findUserConsigneeByUserId(5));
+    }
+    @Test
+    void testPrductCode() {
+        System.out.println(CodeGenerateUtils.generateProductCode());
+        System.out.println(CodeGenerateUtils.generateOrderSn(1));
+        System.out.println(CodeGenerateUtils.generateUnionPaySn());
+        System.out.println(CodeGenerateUtils.generateProductCode());
+    }
+    @Test
+    void testImageList() {
+        System.out.println(imageService.findGoodsImage(1));
+    }
+    @Test
+    void testSalesData() {
+        System.out.println(salesDataService.findSalesData());
+    }
+    @Test
+    void testSalesDataPage() {
+        System.out.println(salesDataService.pageSalesData(1, 5, ""));
+    }
 }

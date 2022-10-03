@@ -16,11 +16,11 @@ public class Goods {
     private Integer id;
     private String goods;
     private double price;
-    private Integer isStock;
+    private Integer inStock;
     private String productNumber;
     private double grossWeight;
     private String origin;
-    private String CPUModel;
+    private String cpuModel;
     private String runningMemory;
     private String storageCard;
     private String rearCamera;

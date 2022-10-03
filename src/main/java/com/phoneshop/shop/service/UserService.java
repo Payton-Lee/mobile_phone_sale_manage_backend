@@ -1,11 +1,9 @@
 package com.phoneshop.shop.service;
 
-import cn.hutool.jwt.JWTValidator;
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.phoneshop.shop.entity.User;
-import com.phoneshop.shop.entity.vo.QueryVo;
+import com.phoneshop.shop.entity.vo.UserRoleVo;
 
 import java.util.List;
 
@@ -17,7 +15,8 @@ public interface UserService extends IService<User> {
     String getEncryptedPassword(String password);
     Boolean verifyPassword(String password, String pw_hash);
     Boolean register(User user);
-    List<User> getUserExceptPassword();
+    User getUserExceptPassword(Integer userId);
     Integer getTokenUserId(String token);
-    Page<User> pageUserExceptPassword(QueryVo queryVo);
+    Page<User> pageUserExceptPassword(Integer current, Integer size, String queryInfo);
+    UserRoleVo findUserRoleByUserId(Integer userId);
 }

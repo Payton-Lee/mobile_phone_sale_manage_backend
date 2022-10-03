@@ -1,12 +1,10 @@
 package com.phoneshop.shop.controller;
 
-import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
 import com.phoneshop.shop.entity.*;
 import com.phoneshop.shop.entity.enums.PermissionCode;
 import com.phoneshop.shop.entity.enums.ReturnCode;
 import com.phoneshop.shop.entity.result.ResultData;
-import com.phoneshop.shop.entity.vo.QueryVo;
 import com.phoneshop.shop.service.PermissionService;
 import com.phoneshop.shop.service.RoleService;
 import com.phoneshop.shop.service.UserRoleService;
@@ -19,7 +17,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("/v1/user")
+@RequestMapping("/user")
 public class UserManageController {
     private UserService userService;
     private RoleService roleService;
@@ -42,16 +40,15 @@ public class UserManageController {
         this.userRoleService = userRoleService;
     }
     @GetMapping("/users")
-    public Object users(HttpServletRequest request, @RequestBody QueryVo queryVo) {
+    public Object users(HttpServletRequest request, @RequestParam Integer current, @RequestParam Integer size, @RequestParam String queryInfo) {
         if(permissionService.verifyPermission(request.getHeader("Authorization"), PermissionCode.PC107.name)){
-            return userService.pageUserExceptPassword(queryVo);
+            return userService.pageUserExceptPassword(current, size, queryInfo);
         } else {
             return ResultData.fail(ReturnCode.ACCESS_DENIED.code, ReturnCode.ACCESS_DENIED.message);
         }
     }
-    @PutMapping("/edituser")
-    public Object updateState(HttpServletRequest request, @RequestParam Integer userId, @RequestParam Integer state) {
-        ResultData<Object> resultData;
+    @PutMapping("/{userId}/edituser/{state}")
+    public Object updateUserState(HttpServletRequest request, @PathVariable Integer userId, @PathVariable Integer state) {
         /*
          * 判断用户权限
          * */
@@ -61,30 +58,26 @@ public class UserManageController {
             userInDB.setState(state);
             userInDB.setUpdateTime(LocalDateTime.now());
             if(userService.updateById(userInDB)) {
-                data.set("username", userInDB.getUsername()).set("msg", "更新用户状态成功");
-                resultData = ResultData.success(ReturnCode.RC201.code, ReturnCode.RC201.message, data);
+                data.set("user", userService.getUserExceptPassword(userInDB.getId())).set("msg", "更新用户状态成功");
+                return ResultData.success(ReturnCode.RC201.code, ReturnCode.RC201.message, data);
             } else {
                 data.set("msg", "更新用户状态失败");
-                resultData = ResultData.fail(ReturnCode.RC999.code, ReturnCode.RC999.message, data);
+                return ResultData.fail(ReturnCode.RC999.code, ReturnCode.RC999.message, data);
             }
         } else {
-            resultData = ResultData.fail(ReturnCode.ACCESS_DENIED.code, ReturnCode.ACCESS_DENIED.message);
+            return ResultData.fail(ReturnCode.ACCESS_DENIED.code, ReturnCode.ACCESS_DENIED.message);
         }
-        return resultData;
     }
     @GetMapping("/rolename")
     public Object getRoleName(HttpServletRequest request) {
-        ResultData<Object> resultData;
         if(permissionService.verifyPermission(request.getHeader("Authorization"),PermissionCode.PC109.name)){
-            List<Role> roleList = roleService.list();
-            resultData = ResultData.success(ReturnCode.RC200.code, ReturnCode.RC200.message, roleList);
+            return ResultData.success(ReturnCode.RC200.code, ReturnCode.RC200.message, roleService.list());
         } else {
-            resultData = ResultData.fail(ReturnCode.ACCESS_DENIED.code, ReturnCode.ACCESS_DENIED.message);
+            return ResultData.fail(ReturnCode.ACCESS_DENIED.code, ReturnCode.ACCESS_DENIED.message);
         }
-        return resultData;
     }
-    @PutMapping("/edituserrole")
-    public Object editUserRole(HttpServletRequest request, Integer userId, String roleIds) {
+    @PutMapping("/{userId}/edituserrole/{roleIds}")
+    public Object editUserRole(HttpServletRequest request, @PathVariable Integer userId, @PathVariable String roleIds) {
         if(permissionService.verifyPermission(request.getHeader("Authorization"), PermissionCode.PC110.name)) {
             Dict data = Dict.create();
             boolean flag = false;
@@ -104,10 +97,10 @@ public class UserManageController {
             return ResultData.fail(ReturnCode.ACCESS_DENIED.code, ReturnCode.ACCESS_DENIED.message);
         }
     }
-    @GetMapping("/userrole")
-    public Object getUserRole(HttpServletRequest request, Integer userId) {
+    @GetMapping("/userrole/{userId}")
+    public Object getUserRole(HttpServletRequest request, @PathVariable Integer userId) {
         if (permissionService.verifyPermission(request.getHeader("Authorization"), PermissionCode.PC107.name)) {
-            return ResultData.success(ReturnCode.RC200.code, ReturnCode.RC200.message, roleService.findRoleListByUserId(userId));
+            return ResultData.success(ReturnCode.RC200.code, ReturnCode.RC200.message, userService.findUserRoleByUserId(userId));
         } else {
             return ResultData.fail(ReturnCode.ACCESS_DENIED.code, ReturnCode.ACCESS_DENIED.message);
         }

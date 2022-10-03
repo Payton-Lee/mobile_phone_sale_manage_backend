@@ -13,8 +13,6 @@ import java.util.List;
 
 @Service
 public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> implements UserRoleService {
-    @Autowired
-    private UserRoleMapper userRoleMapper;
 
     @Override
     public Boolean deleteUserRoleByUserId(Integer userId) {

@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserRoleVo {
+    private Integer userId;
     private Integer roleId;
     private String username;
     private String role;

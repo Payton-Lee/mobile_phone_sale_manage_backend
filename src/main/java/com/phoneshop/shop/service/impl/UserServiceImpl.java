@@ -13,14 +13,16 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.phoneshop.shop.entity.User;
-import com.phoneshop.shop.entity.vo.QueryVo;
+
+import com.phoneshop.shop.entity.vo.UserRoleVo;
 import com.phoneshop.shop.mapper.UserMapper;
+import com.phoneshop.shop.service.PermissionService;
+import com.phoneshop.shop.service.RoleService;
 import com.phoneshop.shop.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
@@ -29,6 +31,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Autowired
     private UserMapper userMapper;
 
+    private RoleService roleService;
+
+    @Autowired
+    protected void setRoleService(RoleService roleService) {
+        this.roleService = roleService;
+    }
     @Override
     public User getByUserName(String userName) {
         return getOne(Wrappers.<User>lambdaQuery().eq(User::getUsername, userName),false);
@@ -71,20 +79,25 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public List<User> getUserExceptPassword() {
-        LambdaQueryWrapper<User> wrapper = Wrappers.<User>lambdaQuery().select(User.class, info -> !info.getColumn().equals("password"));
-        return userMapper.selectList(wrapper);
+    public User getUserExceptPassword(Integer userId) {
+        LambdaQueryWrapper<User> wrapper = Wrappers.<User>lambdaQuery().select(User.class, info -> !info.getColumn().equals("password")).eq(User::getId, userId);
+        return userMapper.selectOne(wrapper);
     }
 
     @Override
-    public Page<User> pageUserExceptPassword(QueryVo queryVo) {
+    public Page<User> pageUserExceptPassword(Integer current, Integer size, String queryInfo) {
         QueryWrapper<User> wrapper = new QueryWrapper<>();
-        Page<User> page = new Page<>(queryVo.getCurrent(), queryVo.getSize());
-        if(!StringUtils.isEmpty(queryVo.getQueryInfo())) {
-               wrapper.like("username", queryVo.getQueryInfo());
+        Page<User> page = new Page<>(current, size);
+        if(!StringUtils.isEmpty(queryInfo)) {
+               wrapper.like("username", queryInfo);
         }
         wrapper.select(User.class, info -> !info.getColumn().equals("password"));
         return page(page, wrapper);
+    }
+
+    @Override
+    public UserRoleVo findUserRoleByUserId(Integer userId) {
+        return userMapper.findUserRoleByUserId(userId);
     }
 
     @Override

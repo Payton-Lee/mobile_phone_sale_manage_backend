@@ -23,4 +23,6 @@ public class User {
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
     private Integer state;
+    private Double stature;
+    private String qualification;
 }
