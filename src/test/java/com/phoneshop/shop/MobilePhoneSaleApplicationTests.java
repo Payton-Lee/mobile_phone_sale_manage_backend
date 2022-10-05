@@ -10,6 +10,7 @@ import com.phoneshop.shop.entity.vo.UserRoleVo;
 import com.phoneshop.shop.entity.enums.PermissionCode;
 import com.phoneshop.shop.service.*;
 import com.phoneshop.shop.utils.CodeGenerateUtils;
+import org.jasypt.util.text.BasicTextEncryptor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,6 +32,8 @@ class MobilePhoneSaleApplicationTests {
     private ImageService imageService;
     @Autowired
     private SalesDataService salesDataService;
+    @Autowired
+    private OrderService orderService;
     @Test
     void contextLoads() {
         String password = "12345678";
@@ -144,5 +147,22 @@ class MobilePhoneSaleApplicationTests {
     @Test
     void testSalesDataPage() {
         System.out.println(salesDataService.pageSalesData(1, 5, ""));
+    }
+
+    @Test
+    void testOrder() {
+        System.out.println(orderService.pageOrderList(1, 5,  "小米11"));
+    }
+
+    @Test
+    void mysqlConfig() {
+        BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
+        textEncryptor.setPassword("peytonlee");
+        String userName = textEncryptor.encrypt("root");
+        String passWord = textEncryptor.encrypt("lpxLPXroot1201?_");
+        String url = textEncryptor.encrypt("jdbc:mysql://peytonlee.top:3306/mobile_phone_sale?serverTimezone=UTC");
+//        System.out.println(userName);
+//        System.out.println(passWord);
+        System.out.println(url);
     }
 }
